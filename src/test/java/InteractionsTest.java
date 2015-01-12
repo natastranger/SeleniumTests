@@ -1,16 +1,18 @@
+package interactions;
 
+import org.apache.xpath.operations.Bool;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.awt.*;
-import java.lang.reflect.Array;
-import java.security.Key;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -19,6 +21,10 @@ import static java.lang.Thread.sleep;
 /**
  * Created by Admin on 05.01.2015.
  */
+
+/*
+Alerts and dragAndDrops actions work better in FF browser
+*/
 
 public class InteractionsTest {
     private static final String BASE_URL = "http://the-internet.herokuapp.com/";
@@ -37,7 +43,7 @@ public class InteractionsTest {
 
     @AfterMethod
     public void after() {
-        driver.close();
+        driver.quit();
     }
 
     @Test
@@ -160,17 +166,56 @@ public class InteractionsTest {
     public void iFramesTest() {
         driver.findElement(By.linkText("Frames")).click();
         driver.findElement(By.linkText("iFrame")).click();
-        driver.switchTo().frame("mce_0_ifr");
-        WebElement iFrame = driver.findElement(By.tagName("p"));
-        Assert.assertEquals(iFrame.getText(), "Your content goes here.");
-        iFrame.click();
-        iFrame.sendKeys("This is new text");
-//        Actions actions = new Actions(driver);
-//        actions.sendKeys(Keys.LEFT_CONTROL).sendKeys("A").perform();
+        driver.switchTo().frame(driver.findElement(By.tagName("iframe")));
+        driver.findElement(By.id("tinymce")).click();
+        Assert.assertEquals(driver.findElement(By.tagName("p")).getText(), "Your content goes here.");
+        Actions actions = new Actions(driver);
+//        actions.sendKeys(Keys.LEFT_CONTROL, "A").perform();
+        driver.findElement(By.id("tinymce")).sendKeys("This is new text");
+//        actions.sendKeys(Keys.LEFT_CONTROL, "A").perform();
 //        actions.sendKeys(Keys.LEFT_CONTROL).sendKeys("B").perform();
-        driver.switchTo().frame("mce_0_ifr");
-        Assert.assertEquals(iFrame.getText(), "This is new text");
+        Assert.assertEquals(driver.findElement(By.tagName("p")).getText(), "This is new text");
     }
+
+    @Test
+    public void dragAndDrop() {
+        driver.findElement(By.linkText("Drag and Drop")).click();
+        WebElement columnA = driver.findElement(By.id("column-a"));
+        WebElement columnB = driver.findElement(By.id("column-b"));
+        Assert.assertEquals(columnA.getText(), "A");
+        Assert.assertEquals(columnB.getText(), "B");
+        Actions actions = new Actions(driver);
+//        1 способ
+//        actions.dragAndDrop(columnA, columnB).perform();
+//        Assert.assertEquals(columnA.getText(), "B");
+//        Assert.assertEquals(columnA.getText(), "A");
+
+//        2a способ
+//        actions.
+//                clickAndHold(columnA).perform();
+//        actions
+//                .moveToElement(columnB)
+//                .release()
+//                .perform();
+
+//        2б способ
+//        actions
+//                .moveToElement(columnA)
+//                .click()
+//                .moveToElement(columnB)
+//                .release()
+//                .perform();
+//        Assert.assertEquals(columnA.getText(), "B");
+//        Assert.assertEquals(columnA.getText(), "A");
+
+//        3 способ
+//        actions
+//                .dragAndDropBy(columnA, columnB.getLocation().getX() - columnA.getLocation().getX() , 0);
+
+//        вызов ожидалки
+//        WebElement elem = waitForElement(driver, By.id(""))
+    }
+
 
     private static boolean isAlertPresent(WebDriver driver) {
         try {
@@ -182,3 +227,5 @@ public class InteractionsTest {
     }
 
 }
+
+
