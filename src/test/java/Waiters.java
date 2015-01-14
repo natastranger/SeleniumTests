@@ -7,6 +7,17 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  * Created by HP-G62 on 11.01.2015.
  */
 public class Waiters {
+    
+    //    ожидание загрузки всех JS на странице
+    public static void waitForJquery(WebDriver driver) throws InterruptedException {
+        new WebDriverWait(driver, 60).until(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                JavascriptExecutor js = (JavascriptExecutor) webDriver;
+                return (Boolean) js.executeScript("return jQuery.active == 0");
+            }
+        });
+    }
 
     //    ожидание определенного тайтла на странице
     public static void waitForTilte(WebDriver driver, String title) {
