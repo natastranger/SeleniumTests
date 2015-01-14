@@ -24,7 +24,7 @@ public class Waiters {
         WebDriverWait wait = new WebDriverWait(driver, 60);
         wait.until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver driver) {
-                return driver.getTitle().contains("Onliner.by");
+                return driver.getTitle().contains(title);
             }
         });
     }
