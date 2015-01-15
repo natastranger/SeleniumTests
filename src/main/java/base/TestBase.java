@@ -7,7 +7,6 @@ import org.testng.annotations.BeforeMethod;
 
 import java.util.concurrent.TimeUnit;
 
-import static java.lang.Thread.sleep;
 
 /**
  * Created by HP-G62 on 15.01.2015.
