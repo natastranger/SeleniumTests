@@ -83,9 +83,6 @@ public class ElementsTest {
         ref.click();
 
         Select dropdown = new Select(driver.findElement(By.linkText("Dropdown")));
-
-
-
 //        new Select(driver.findElement(B))
 
 //                dropdown = driver.findElement(By.id("dropdown"));
@@ -97,9 +94,22 @@ public class ElementsTest {
 //                "  ");
 //        dropdown.click();
 //        dropdown.findElement(By.linkText("Option 2")).click();
-
-
     }
+        @Test
+        public void formAuthenticationPositiveTest() throws InterruptedException {
+            WebElement ref = driver.findElement(By.linkText("Form Authentication"));
+            ref.click();
+            WebElement userNameInput = driver.findElement(By.id("username"));
+            WebElement passwordInput = driver.findElement(By.id("password"));
+            WebElement buttonLogin = driver.findElement(By.className("radius"));
 
+            Assert.assertEquals(userNameInput.getText(), "");
+            Assert.assertEquals(passwordInput.getText(), "");
 
+            userNameInput.sendKeys("tomsmith");
+            passwordInput.sendKeys("SuperSecretPassword!");
+            buttonLogin.click();
+
+            Assert.assertTrue(driver.findElement(By.id("flash")).getText().contains("You logged into a secure area!"));
+        }
 }
